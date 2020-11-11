@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
+using NuLink.Cli;
 using NUnit.Framework;
 
 namespace NuLink.Tests.Acceptance
@@ -186,6 +189,22 @@ namespace NuLink.Tests.Acceptance
                     }
                 }
             });
+        }
+
+        [TestCaseSource(nameof(GetSupportedTargets))]
+        public void LinkPackagePaketStyle(AcceptanceTestTarget target)
+        {
+            var command = new LinkCommand(new BareUI());
+            var options = new NuLinkCommandOptions(
+                consumerProjectPath: Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "workspace", "o-pitblast", "O-Pitblast2", "O-Pitblast 2", "O-Pitblast2.csproj"),
+                packageId: "EpirocComponent",
+                localProjectPath: Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "workspace", "o-pitblast", "EpirocComponent", "EpirocComponent", "EpirocComponent.csproj")
+            );
+
+            var resultCode = command.Execute(options);
+
+            Assert.AreEqual(0, resultCode);
+
         }
     }
 }

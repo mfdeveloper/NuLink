@@ -8,10 +8,12 @@ namespace NuLink.Cli
     public class PackageReferenceLoader
     {
         private readonly IUserInterface _ui;
+        private readonly NuLinkCommandOptions _commandOptions;
 
-        public PackageReferenceLoader(IUserInterface ui)
+        public PackageReferenceLoader(IUserInterface ui, NuLinkCommandOptions options = null)
         {
             _ui = ui;
+            _commandOptions = options;
         }
 
         public HashSet<PackageReferenceInfo> LoadPackageReferences(IEnumerable<ProjectAnalyzer> projects)
@@ -22,7 +24,7 @@ namespace NuLink.Cli
             {
                 _ui.ReportMedium(() => $"Checking package references: {Path.GetFileName(project.ProjectFile.Path)}");
 
-                var projectStyle = ProjectStyle.Create(_ui, project);
+                var projectStyle = ProjectStyle.Create(_ui, project, _commandOptions);
                 var projectPackages = projectStyle.LoadPackageReferences();
                 
                 results.UnionWith(projectPackages);
